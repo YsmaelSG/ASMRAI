@@ -7,7 +7,6 @@ from pydantic import BaseModel
 import asyncio
 from dotenv import load_dotenv
 from google import genai
-
 # loads env variables into os enviroment to be SNATCHED
 load_dotenv() 
 api_curr_key = os.getenv("GEMINI_API_KEY")
