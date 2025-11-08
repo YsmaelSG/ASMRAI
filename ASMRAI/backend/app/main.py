@@ -1,31 +1,49 @@
 from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+from fastapi import HTTPException
+import os
+import io
 from pydantic import BaseModel
-from fastapi.responses import FileResponse
+import asyncio
+from dotenv import load_dotenv
 from google import genai
-from google.genai import types
 
-import time
-
+# loads env variables into os enviroment to be SNATCHED
+load_dotenv() 
+api_curr_key = os.getenv("GEMINI_API_KEY")
 
 class Video(BaseModel):
     response: str
     orderNumber: int
 
 
-cilent = genai.Cilent()
+client = genai.Client(api_key=api_curr_key)
 app = FastAPI()
 
 
 @app.post("/")
 async def getVideo(videoBody: Video):
-    operation = cilent.models.generate_videos(
+    operation = client.models.generate_videos(
         model ="veo-3.1-generate-preview",
         prompt= str(videoBody.response),)
     
     while not operation.done:
-        time.sleep(10)
+        await asyncio.sleep(2)
         # Refresh the operation object to get the latest status.
         operation = client.operations.get(operation)
+
+        if operation.error:
+            raise HTTPException(
+                status_code=500,
+                detail="operation failed to load."
+            )
     
-    return FileResponse(operation.response.generatedVideos[0].video, media_type="video/mp4")
-    
+    stream = io.BytesIO(operation.response.generatedVideos[0].video)
+
+    return StreamingResponse(
+        stream,
+        media_type="video/mp4",
+        headers={
+            "Content-Disposition": 'inline; filename="generated.mp4"'
+        }
+    )  
