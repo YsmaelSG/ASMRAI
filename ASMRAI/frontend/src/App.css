@@ -1,0 +1,189 @@
+/* src/App.css */
+
+:root {
+  --bg: #273b63;          /* page background */
+  --panel: #334465;       /* cards/panels */
+  --text: #e5e7eb;        /* primary text */
+  --muted: #94a3b8;       /* secondary text */
+  --line: #273b63;        /* borders */
+  --brand: #9ba6bd;       /* accent */
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+
+/* --- GRID LAYOUT --- */
+.app {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: 80px 1fr;
+  grid-template-columns: 320px 1fr;
+  grid-template-areas:
+    "topbar topbar"
+    "sidebar stage";
+  gap: 16px;
+  padding: 16px;
+}
+
+/* Top bar */
+.topbar {
+  grid-area: topbar;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.logoImg {
+  width: 45px;          /* adjust size as needed */
+  height: 45px;
+  border-radius: 50%;   /* keep circle shape */
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.title { font-weight: 700; letter-spacing: 0.3px; font-size: 1.6rem;}
+
+.nav { display: flex; align-items: center; gap: 8px; }
+.navbtn {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--line);
+  padding: 8px 12px; border-radius: 10px; cursor: pointer;
+}
+.navbtn.profile { border-color: transparent; background: #1f2937; }
+
+/* Sidebar */
+.sidebar {
+  grid-area: sidebar;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  overflow: auto;
+}
+.sidebar h3 { margin: 0 0 12px; color: var(--text); }
+
+.card {
+  background: #0f1629;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+.cardTitle { font-weight: 600; margin: 0 0 6px; }
+.cardBody { color: var(--muted); margin: 0 0 8px; }
+
+.textarea {
+  width: 100%;
+  background: #0b1220;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+  resize: vertical;
+  font-family: system-ui;  
+}
+
+.small {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #17213a;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.picker { margin-top: 16px; }
+.pickLabel { font-size: 0.9rem; color: var(--muted); display: grid; gap: 6px; }
+
+/* Stage */
+.stage {
+  grid-area: stage;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.videoBox {
+  flex: 1;
+  background: #0f1629;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  min-height: 320px;
+  aspect-ratio: 16/9;
+}
+
+.videoBox video {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  outline: none;
+}
+
+.videoPlaceholder {
+  text-align: center;
+  color: var(--muted);
+}
+.playIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+/* Buttons under video */
+.actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.actions button {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #17213a;
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+}
+.actions .primary {
+  background: var(--brand);
+  color: #0b1220;
+  border-color: transparent;
+}
+
+/* Responsive: stack sidebar below on small screens */
+@media (max-width: 900px) {
+  .app {
+    grid-template-rows: 64px auto auto;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "topbar"
+      "stage"
+      "sidebar";
+  }
+  .actions { grid-template-columns: 1fr 1fr; }
+}

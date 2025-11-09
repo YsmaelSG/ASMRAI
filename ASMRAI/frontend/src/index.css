@@ -1,0 +1,48 @@
+/* src/index.css — minimal reset for full-width app */
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Let our App.css control layout/colors; no centering here */
+body {
+  display: block;         /* was flex */
+  background: transparent;
+  color: inherit;
+}
+
+#root {
+  max-width: none;        /* remove any width cap */
+  text-align: left;       /* stop global centering */
+}
+
+/* (Optional) keep your link/button defaults if you want them project-wide */
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: none;
+}
+a:hover { color: #535bf2; }
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover { border-color: #646cff; }
+button:focus,
+button:focus-visible { outline: 4px auto -webkit-focus-ring-color; }
+
+@media (prefers-color-scheme: light) {
+  a:hover { color: #747bff; }
+  button { background-color: #f9f9f9; }
+}
