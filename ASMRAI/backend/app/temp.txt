@@ -1,0 +1,23 @@
+LOOP (repeat until verified or after 2 total verifier checks):
+- If verify_report.ok == false:
+    - Call director_agent again, using verify_report.issues to revise the draft.
+    - Then call verifier_agent again.
+- If verify_report.ok == true:
+    - Proceed to Finalization.
+
+PROHIBITION:
+- Do NOT write 'final_response' at any time before verify_report.ok == true in the SAME turn.
+
+FINALIZATION (copy-only):
+- When and only when verify_report.ok == true in THIS turn:
+
+
+for verifier agent :
+{ 'ok': <bool>, 'issues': <list of strings> }
+
+
+- Otherwise, DO NOT produce 'final_response'. Continue the loop.
+
+ITERATION LIMITS:
+- You MUST perform Step 1 then Step 2 at least once before any attempt to finalize.
+- You MUST NOT exceed 2 calls to director_agent or 2 calls to verifier_agent in total.

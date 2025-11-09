@@ -1,8 +1,6 @@
 from google.adk.agents.llm_agent import Agent
-from google.genai import types
 from google.adk.tools.agent_tool import AgentTool
 
-from typing import Optional, List, Dict, Any
 
 
 
@@ -28,7 +26,7 @@ verifier_agent = Agent(
                  High-Quality audio, atleast one ASMR trigger, soothing visuals, aesthetic background and calm and presentable.
                  4 <= duration_sec <= 8 and aspect_ratio ∈ {"16:9","9:16","1:1"}
                  "You verify the draft meets constraints. Respond ONLY as JSON with 'verify_report':"
-                "{ 'ok': <bool>, 'issues': <list of strings> }
+                { response: <Str>, duration: <int> ,aspect_ratio: <Str> }
 
                  """),
     output_key="verify_report"
@@ -84,31 +82,15 @@ root_agent = Agent(
 
 Available sub-agents (and their output keys):
 - director_agent → writes 'draft' = { "prompt": string, "duration_sec": int, "aspect_ratio": "16:9"|"9:16"|"1:1" }
-- verifier_agent → writes 'verify_report' = { "ok": bool, "issues": [string] }
+- verifier_agent → writes 'verify_report' = { response: <Str>, duration: <int> ,aspect_ratio: <Str> }
 
 SEQUENTIAL WORKFLOW (follow exactly; no alternative routes):
 Step 1 (ALWAYS): Call director_agent to produce 'draft'.
 Step 2 (ALWAYS): Call verifier_agent with the current 'draft'.
 
-LOOP (repeat until verified or after 2 total verifier checks):
-- If verify_report.ok == false:
-    - Call director_agent again, using verify_report.issues to revise the draft.
-    - Then call verifier_agent again.
-- If verify_report.ok == true:
-    - Proceed to Finalization.
 
-PROHIBITION:
-- Do NOT write 'final_response' at any time before verify_report.ok == true in the SAME turn.
-
-FINALIZATION (copy-only):
-- When and only when verify_report.ok == true in THIS turn:
   - Copy the current 'draft' fields into 'final_response' as pure JSON:
     { "prompt": string, "duration_sec": int, "aspect_ratio": string }.
-- Otherwise, DO NOT produce 'final_response'. Continue the loop.
-
-ITERATION LIMITS:
-- You MUST perform Step 1 then Step 2 at least once before any attempt to finalize.
-- You MUST NOT exceed 5 calls to director_agent or 4 calls to verifier_agent in total.
 
 
   """,
